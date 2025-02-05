@@ -54,7 +54,18 @@ class CROPApp:
         self.original_canvas.bind("<B1-Motion>", self.on_move_press)
         self.original_canvas.bind("<ButtonRelease-1>", self.on_button_release)
 
-    
+    def load_image(self):
+        # Select and load image from local device
+        file_path = filedialog.askopenfilename()
+        if file_path:
+            image = cv2.imread(file_path)
+            # Resize image to fit within the canvas size
+            self.original_image = self.resize_image_to_canvas(image, self.canvas_width, self.canvas_height)
+            # Display thumbnail on the Load button (optional)
+            thumbnail = self.create_thumbnail(self.original_image)
+            self.display_thumbnail(thumbnail)
+            # Show image on original canvas
+            self.show_image(self.original_image)
 
     def create_thumbnail(self, image):
         # Create a temporary thumbnail of the loaded image
