@@ -19,6 +19,10 @@ class CROPApp:
         self.load_button = tk.Button(root, text="Load Image", command=self.load_image)
         self.load_button.pack(pady=5)
 
+        # Bind shortcut key for saving (CTRL + S)
+        self.root.bind("<Control-s>", self.save_image_event)
+
+
         # Frame to hold canvases side by side
         self.canvas_frame = tk.Frame(root)
         self.canvas_frame.pack()
@@ -210,6 +214,10 @@ class CROPApp:
         if file_path:
             cv2.imwrite(file_path, self.preview_image)  # Save the blurred image
             print(f"Image saved at: {file_path}")
+            
+    def save_image_event(self, event=None):
+        # This function is called when CTRL + S is pressed
+        self.save_image()
 
 if __name__ == "__main__":
     root = tk.Tk()
