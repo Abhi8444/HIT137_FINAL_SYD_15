@@ -141,7 +141,30 @@ class CROPApp:
         # Draw rectangle
         self.rect = self.original_canvas.create_rectangle(self.start_x, self.start_y, cur_x, cur_y, outline='white')
 
-    
+    def on_button_release(self, event):
+        # Finalize cropping area and display cropped image
+        if self.original_image is None:
+            return
+        x0, y0 = int(self.start_x), int(self.start_y)
+        x1, y1 = int(event.x), int(event.y)
+        x0, x1 = sorted([x0, x1])
+        y0, y1 = sorted([y0, y1])
+        x0_img = x0 - self.image_x_offset
+        y0_img = y0 - self.image_y_offset
+        x1_img = x1 - self.image_x_offset
+        y1_img = y1 - self.image_y_offset
+        height, width = self.original_image.shape[:2]
+        x0_img, x1_img = max(0, x0_img), min(width, x1_img)
+        y0_img, y1_img = max(0, y0_img), min(height, y1_img)
+        self.cropped_image = self.original_image[y0_img:y1_img, x0_img:x1_img].copy()
+        if self.cropped_image.size == 0:
+            print("Invalid crop area selected.")
+            return
+        self.preview_image = self.cropped_image.copy()
+        # Resize preview image to fit the preview canvas
+        self.preview_image = self.resize_image_to_canvas(self.preview_image, self.canvas_width, self.canvas_height)
+        self.show_preview_image(self.preview_image)
+        self.update_preview(self.scale.get())
 
     def show_preview_image(self, image):
         # Display the cropped image on the preview canvas
