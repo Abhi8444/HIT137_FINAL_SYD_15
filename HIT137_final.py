@@ -81,7 +81,25 @@ class CROPApp:
             self.load_button.config(image=self.thumbnail_photo, compound=tk.LEFT)
             self.load_button.image = self.thumbnail_photo
 
-    
+    def resize_image_to_canvas(self, image, canvas_width, canvas_height):
+        # Resize image to fit within the canvas while maintaining aspect ratio
+        height, width = image.shape[:2]
+        aspect_ratio = width / height
+
+        if width > canvas_width or height > canvas_height:
+            if aspect_ratio > 1:
+                # Wider image
+                new_width = canvas_width
+                new_height = int(canvas_width / aspect_ratio)
+            else:
+                # Taller image
+                new_height = canvas_height
+                new_width = int(canvas_height * aspect_ratio)
+            resized_image = cv2.resize(image, (new_width, new_height))
+            return resized_image
+        else:
+            # No resizing needed
+            return image
     def show_image(self, image):
         # Display the image on the original canvas
         self.original_canvas.delete("all")
